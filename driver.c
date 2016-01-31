@@ -20,7 +20,7 @@ struct device *yinwoods_dev;
 
 static ssize_t yinwoods_store(struct device *dev, struct device_attribute *attr, char *buf, size_t size) {
     if(size > 4096) {
-        printk(KERN_ALERT "fuck you!");
+        printk(KERN_ALERT "size too large!");
         return 0;
     }
     return sprintf(((struct yinwoods_data *) dev->platform_data)->a, buf);
