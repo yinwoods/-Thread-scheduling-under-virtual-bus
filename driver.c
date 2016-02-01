@@ -12,9 +12,17 @@ MODULE_LICENSE("GPL");
 struct yinwoods_data {
     char a[4096];
     char *name;
+
+    int left;
+    int right;
+    int result;
+
+    char *mutex;
+
     struct device *dev;
 };
 
+static char *tmp;
 struct class *yinwoods_class;
 struct device *yinwoods_dev;
 
@@ -43,7 +51,23 @@ static int yinwoods_probe(struct platform_device *dev) {
     yinwoods_dev->platform_data = p;
     device_create_file(yinwoods_dev, &dev_attr_brightness);
 
-    printk(KERN_ALERT "%s", p->a);
+    //判断是id 为 1的驱动, 计算算式的值
+    if(dev->id == 1) {
+        p->result = p->left + p->right;
+        printk(KERN_ALERT "device1 result = %d\n", p->result);
+        tmp = p->mutex;
+    }
+
+    //判断是id 为 2驱动, 计算算式的值
+    if(dev->id == 2) {
+        p->result = p->left + p->right;
+        printk(KERN_ALERT "device2 result = %d\n", p->result);
+        if(strlen(tmp) != 0) {
+            p->mutex = tmp;
+        }
+        printk(KERN_ALERT "device2 mutex = %s\n", p->mutex);
+    }
+
     return 0;
 }
 
