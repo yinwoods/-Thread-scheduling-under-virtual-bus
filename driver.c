@@ -17,12 +17,15 @@ struct yinwoods_data {
     int right;
     int result;
 
+    int status;
+
     char *mutex;
 
     struct device *dev;
 };
 
-static char *tmp;
+static char *tmp;               //作为进程间通信的中间变量
+static int result;              //保存主状态位进程的计算结果
 struct class *yinwoods_class;
 struct device *yinwoods_dev;
 
@@ -51,14 +54,21 @@ static int yinwoods_probe(struct platform_device *dev) {
     yinwoods_dev->platform_data = p;
     device_create_file(yinwoods_dev, &dev_attr_brightness);
 
-    //判断是id 为 1的驱动, 计算算式的值
+    printk(KERN_ALERT "%s\n", p->mutex);
+
+    //判断是id 为 1的设备, 计算算式的值
+    //并将该设备的一个字符串保存下来，在下一步传送给另一个设备
     if(dev->id == 1) {
-        p->result = p->left + p->right;
+        //状态位是主
+        if(p->status == 0) {
+            p->result = p->left + p->right;
+            result = p->result;
+        }
         printk(KERN_ALERT "device1 result = %d\n", p->result);
         tmp = p->mutex;
     }
 
-    //判断是id 为 2驱动, 计算算式的值
+    //判断是id 为 2的设备, 计算算式的值
     if(dev->id == 2) {
         p->result = p->left + p->right;
         printk(KERN_ALERT "device2 result = %d\n", p->result);
