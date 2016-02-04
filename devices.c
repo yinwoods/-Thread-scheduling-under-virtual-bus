@@ -12,7 +12,9 @@
 #include <linux/types.h>
 #include <linux/wait.h>
 
+int i;
 static int device_num = 0;
+struct platform_device *yinwoods_device[10];
 
 module_param(device_num, int, 0000);
 //MODULE_PARM(device_num);
@@ -40,32 +42,15 @@ struct yinwoods_data s = {
     .mutex = "translate this message from device1\n",
 };
 
-struct platform_device yinwoods_device[] = {
-    [0] = { .name = "yinwoods", .id = 1, .dev = { .platform_data = &s, }, },
-
-    [1] = { .name = "yinwoods", .id = 2, .dev = { .platform_data = &s, }, },
-
-    [2] = { .name = "yinwoods", .id = 3, .dev = { .platform_data = &s, }, },
-
-    [3] = { .name = "yinwoods", .id = 4, .dev = { .platform_data = &s, }, },
-
-    [4] = { .name = "yinwoods", .id = 5, .dev = { .platform_data = &s, }, },
-
-    [5] = { .name = "yinwoods", .id = 6, .dev = { .platform_data = &s, }, },
-
-    [6] = { .name = "yinwoods", .id = 7, .dev = { .platform_data = &s, }, },
-};
-
 static int __init yinwoods_init(void) {
-
-    int i;
 
     sprintf(s.a, "this message is from device1 to driver!\n");
 
     printk(KERN_ALERT "device_num = %d", device_num);
 
     for(i=0; i<device_num; ++i) {
-        platform_device_register(&yinwoods_device[i]);
+        yinwoods_device[i] = platform_device_alloc("yinwoods", i);
+        platform_device_register(yinwoods_device[i]);
     }
 
     //platform_add_devices(yinwoods_device, ARRAY_SIZE(yinwoods_device));
@@ -76,7 +61,7 @@ static void __exit yinwoods_exit(void) {
 
     int i;
     for(i=device_num-1; i>=0; --i) {
-        platform_device_unregister(&yinwoods_device[i]);
+        platform_device_unregister(yinwoods_device[i]);
     }
 }
 
