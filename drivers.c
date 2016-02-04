@@ -68,14 +68,14 @@ static int yinwoods_probe(struct platform_device *dev) {
         tmp = p->mutex;
     }
 
-    //判断是id 为 2的设备, 计算算式的值
-    if(dev->id == 2) {
+    //判断是id 不为 1的设备, 计算算式的值
+    if(dev->id != 1) {
         p->result = p->left + p->right;
-        printk(KERN_ALERT "device2 result = %d\n", p->result);
+        printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
         if(strlen(tmp) != 0) {
             p->mutex = tmp;
         }
-        printk(KERN_ALERT "device2 mutex = %s\n", p->mutex);
+        printk(KERN_ALERT "device%d mutex = %s\n", dev->id, p->mutex);
     }
 
     return 0;
