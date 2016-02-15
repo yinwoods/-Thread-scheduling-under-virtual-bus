@@ -44,7 +44,7 @@ static ssize_t yinwoods_show(struct device *dev, struct device_attribute *attr, 
 struct device_attribute dev_attr_brightness = { 
     .attr = { .name = "love", .mode = 0644 }, 
     .show = yinwoods_show, 
-    .store = yinwoods_store 
+    .store = yinwoods_store,
 };
 
 static int yinwoods_probe(struct platform_device *dev) {
@@ -63,19 +63,21 @@ static int yinwoods_probe(struct platform_device *dev) {
         if(p->status == 0) {
             p->result = p->left + p->right;
             result = p->result;
+            printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
+            printk(KERN_ALERT "device1 result = %d\n", p->result);
         }
-        printk(KERN_ALERT "device1 result = %d\n", p->result);
         tmp = p->mutex;
     }
 
     //判断是id 不为 1的设备, 计算算式的值
-    else {
+    else if(dev->id == 0) {
         p->result = p->left + p->right;
+        printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
         printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
         if(strlen(tmp) != 0) {
             p->mutex = tmp;
+            printk(KERN_ALERT "device%d mutex = %s\n", dev->id, p->mutex);
         }
-        printk(KERN_ALERT "device%d mutex = %s\n", dev->id, p->mutex);
     }
 
     return 0;
