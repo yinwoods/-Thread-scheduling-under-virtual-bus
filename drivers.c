@@ -29,30 +29,11 @@ static int result;              //保存主状态位进程的计算结果
 struct class *yinwoods_class;
 struct device *yinwoods_dev;
 
-static ssize_t yinwoods_store(struct device *dev, struct device_attribute *attr, char *buf, size_t size) {
-    if(size > 4096) {
-        printk(KERN_ALERT "size too large!");
-        return 0;
-    }
-    return sprintf(((struct yinwoods_data *) dev->platform_data)->a, buf);
-}
-
-static ssize_t yinwoods_show(struct device *dev, struct device_attribute *attr, char *buf) {
-    return sprintf(buf, ((struct yinwoods_data *)dev->platform_data)->a);
-}
-
-struct device_attribute dev_attr_brightness = { 
-    .attr = { .name = "love", .mode = 0644 }, 
-    .show = yinwoods_show, 
-    .store = yinwoods_store,
-};
-
 static int yinwoods_probe(struct platform_device *dev) {
     struct yinwoods_data *p = (dev->dev).platform_data;
     yinwoods_dev = device_create(yinwoods_class, &(dev->dev), 0, NULL, "%s", p->name);
     p->dev = yinwoods_dev;
     yinwoods_dev->platform_data = p;
-    device_create_file(yinwoods_dev, &dev_attr_brightness);
 
     printk(KERN_ALERT "%s\n", p->mutex);
 
@@ -74,10 +55,12 @@ static int yinwoods_probe(struct platform_device *dev) {
         p->result = p->left + p->right;
         printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
         printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
+        /*tmp是NULL Pointer的原因
         if(strlen(tmp) != 0) {
             p->mutex = tmp;
             printk(KERN_ALERT "device%d mutex = %s\n", dev->id, p->mutex);
         }
+        */
     }
 
     return 0;
@@ -85,7 +68,6 @@ static int yinwoods_probe(struct platform_device *dev) {
 
 static int yinwoods_remove(struct platform_device *dev) {
     struct yinwoods_data *p = (dev->dev).platform_data;
-    device_remove_file(p->dev, &dev_attr_brightness);
     device_unregister(p->dev);
 
     return 0;

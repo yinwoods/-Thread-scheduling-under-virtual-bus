@@ -33,12 +33,31 @@ struct yinwoods_data {
     char *mutex;//进程间交互变量
 };
 
-struct yinwoods_data s = {
+struct yinwoods_data s1 = {
     .name = "yinwoods_one",
+    //主
     .status = 0,
     .left = 1,
     .right = 1,
-    .mutex = "translate this message from device1\n",
+    .mutex = "translate this message from device1 s1",
+};
+
+struct yinwoods_data s2 = {
+    .name = "yinwoods_two",
+    //冷
+    .status = 1,
+    .left = 1,
+    .right = 2,
+    .mutex = "translate this message from device1 s2",
+};
+
+struct yinwoods_data s3 = {
+    .name = "yinwoods_three",
+    //热
+    .status = 2,
+    .left = 2,
+    .right = 2,
+    .mutex = "translate this message from device1 s3",
 };
 
 static struct platform_device yinwoods_device[] = {
@@ -46,7 +65,7 @@ static struct platform_device yinwoods_device[] = {
         .name = "yinwoods",
         .id = 0,
         .dev = {
-            .platform_data = &s,
+            .platform_data = &s1,
         },
     },
 
@@ -54,7 +73,7 @@ static struct platform_device yinwoods_device[] = {
         .name = "yinwoods",
         .id = 1,
         .dev = {
-            .platform_data = &s,
+            .platform_data = &s2,
         },
     },
 
@@ -62,7 +81,7 @@ static struct platform_device yinwoods_device[] = {
         .name = "yinwoods",
         .id = 2,
         .dev = {
-            .platform_data = &s,
+            .platform_data = &s3,
         },
     },
 };
@@ -83,8 +102,7 @@ static int __init yinwoods_init(void) {
 
 static void __exit yinwoods_exit(void) {
 
-    int i;
-    for(i=device_num-1; i>=0; --i) {
+    for(i=0; i<device_num; ++i) {
         platform_device_unregister(&yinwoods_device[i]);
     }
 }
