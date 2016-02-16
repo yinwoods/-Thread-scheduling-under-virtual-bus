@@ -44,7 +44,7 @@ struct yinwoods_data s1 = {
 
 struct yinwoods_data s2 = {
     .name = "yinwoods_two",
-    //冷
+    //热
     .status = 1,
     .left = 1,
     .right = 2,
@@ -53,7 +53,7 @@ struct yinwoods_data s2 = {
 
 struct yinwoods_data s3 = {
     .name = "yinwoods_three",
-    //热
+    //冷
     .status = 2,
     .left = 2,
     .right = 2,
@@ -88,7 +88,9 @@ static struct platform_device yinwoods_device[] = {
 
 static int __init yinwoods_init(void) {
 
-    sprintf(s.a, "this message is from device1 to driver!\n");
+    sprintf(s1.a, "this message is from device1 s1 to driver!");
+    sprintf(s2.a, "this message is from device1 s2 to driver!");
+    sprintf(s3.a, "this message is from device1 s3 to driver!");
 
     printk(KERN_ALERT "device_num = %d", device_num);
 

@@ -37,30 +37,46 @@ static int yinwoods_probe(struct platform_device *dev) {
 
     printk(KERN_ALERT "%s\n", p->mutex);
 
+    //判断是id 不为 1的设备, 计算算式的值
+    if(dev->id == 0) {
+        if(p->status == 0) {
+            p->result = p->left + p->right;
+            result = p->result;
+            printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
+            printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
+        }
+        else if(p->status == 1) {
+            p->result = p->left + p->right;
+        }
+    }
+
     //判断是id 为 1的设备, 计算算式的值
     //并将该设备的一个字符串保存下来，在下一步传送给另一个设备
     if(dev->id == 1) {
-        //状态位是主
+        //状态位是主，计算并保存结果
+        if(p->status == 0) {
+            p->result = p->left + p->right;
+            result = p->result;
+            printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
+            printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
+        }
+        //状态位是热，只计算，不保存结果
+        else if(p->status == 1) {
+            p->result = p->left + p->right;
+        }
+        //状态位是冷，不计算
+    }
+
+    if(dev->id == 2) {
         if(p->status == 0) {
             p->result = p->left + p->right;
             result = p->result;
             printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
             printk(KERN_ALERT "device1 result = %d\n", p->result);
         }
-        tmp = p->mutex;
-    }
-
-    //判断是id 不为 1的设备, 计算算式的值
-    else if(dev->id == 0) {
-        p->result = p->left + p->right;
-        printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
-        printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
-        /*tmp是NULL Pointer的原因
-        if(strlen(tmp) != 0) {
-            p->mutex = tmp;
-            printk(KERN_ALERT "device%d mutex = %s\n", dev->id, p->mutex);
+        else if(p->status == 1) {
+            p->result = p->left + p->right;
         }
-        */
     }
 
     return 0;
