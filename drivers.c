@@ -29,6 +29,13 @@ static int result;              //保存主状态位进程的计算结果
 struct class *yinwoods_class;
 struct device *yinwoods_dev;
 
+struct device_attribute dev_attr_brightness = {
+    .attr = {
+        .name = "yinwoods",
+        .mode = 0644
+    },
+};
+
 static int yinwoods_probe(struct platform_device *dev) {
     struct yinwoods_data *p = (dev->dev).platform_data;
     yinwoods_dev = device_create(yinwoods_class, &(dev->dev), 0, NULL, "%s", p->name);
@@ -47,6 +54,8 @@ static int yinwoods_probe(struct platform_device *dev) {
         }
         else if(p->status == 1) {
             p->result = p->left + p->right;
+            printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
+            printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
         }
     }
 
@@ -63,6 +72,8 @@ static int yinwoods_probe(struct platform_device *dev) {
         //状态位是热，只计算，不保存结果
         else if(p->status == 1) {
             p->result = p->left + p->right;
+            printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
+            printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
         }
         //状态位是冷，不计算
     }
@@ -76,14 +87,19 @@ static int yinwoods_probe(struct platform_device *dev) {
         }
         else if(p->status == 1) {
             p->result = p->left + p->right;
+            printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
+            printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
         }
     }
+    //有可能有错误
+    device_unregister(p->dev);
 
     return 0;
 }
 
 static int yinwoods_remove(struct platform_device *dev) {
     struct yinwoods_data *p = (dev->dev).platform_data;
+    device_remove_file(p->dev, &dev_attr_brightness);
     device_unregister(p->dev);
 
     return 0;
