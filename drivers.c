@@ -24,7 +24,7 @@ struct yinwoods_data {
     struct device *dev;
 };
 
-static char *tmp;               //作为进程间通信的中间变量
+//static char *tmp;               //作为进程间通信的中间变量
 static int result;              //保存主状态位进程的计算结果
 struct class *yinwoods_class;
 struct device *yinwoods_dev;
