@@ -29,12 +29,14 @@ static int result;              //保存主状态位进程的计算结果
 struct class *yinwoods_class;
 struct device *yinwoods_dev;
 
+/*
 struct device_attribute dev_attr_brightness = {
     .attr = {
         .name = "yinwoods",
         .mode = 0644
     },
 };
+*/
 
 static int yinwoods_probe(struct platform_device *dev) {
     struct yinwoods_data *p = (dev->dev).platform_data;
@@ -43,8 +45,9 @@ static int yinwoods_probe(struct platform_device *dev) {
     yinwoods_dev->platform_data = p;
 
     printk(KERN_ALERT "%s\n", p->mutex);
+    printk(KERN_ALERT "device[%d]'s status = %d\n", dev->id, p->status);
 
-    //判断是id 不为 1的设备, 计算算式的值
+    //判断是id 为 0的设备, 计算算式的值
     if(dev->id == 0) {
         if(p->status == 0) {
             p->result = p->left + p->right;
@@ -83,7 +86,7 @@ static int yinwoods_probe(struct platform_device *dev) {
             p->result = p->left + p->right;
             result = p->result;
             printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
-            printk(KERN_ALERT "device1 result = %d\n", p->result);
+            printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
         }
         else if(p->status == 1) {
             p->result = p->left + p->right;
@@ -91,15 +94,12 @@ static int yinwoods_probe(struct platform_device *dev) {
             printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
         }
     }
-    //有可能有错误
-    device_unregister(p->dev);
 
     return 0;
 }
 
 static int yinwoods_remove(struct platform_device *dev) {
     struct yinwoods_data *p = (dev->dev).platform_data;
-    device_remove_file(p->dev, &dev_attr_brightness);
     device_unregister(p->dev);
 
     return 0;

@@ -14,8 +14,10 @@
 
 int i;
 static int device_num = 3;
+static int global_status[10] = {0, 1, 2};
 
 module_param(device_num, int, 0000);
+module_param_array(global_status, int, &device_num, 0000);
 //MODULE_PARM(device_num);
 
 MODULE_LICENSE("GPL");
@@ -45,7 +47,7 @@ struct yinwoods_data s1 = {
 struct yinwoods_data s2 = {
     .name = "yinwoods_two",
     //热
-    .status = 1,
+    .status = 0,
     .left = 1,
     .right = 2,
     .mutex = "translate this message from device1 s2",
@@ -94,8 +96,13 @@ static int __init yinwoods_init(void) {
 
     printk(KERN_ALERT "device_num = %d", device_num);
 
+    i = 0;
     for(i=0; i<device_num; ++i) {
+        struct yinwoods_data *p = yinwoods_device[i].dev.platform_data;
+
+        p->status = global_status[i];
         platform_device_register(&yinwoods_device[i]);
+        //printk(KERN_ALERT " --- register device[%d]\n", i);
     }
 
     //platform_add_devices(yinwoods_device, ARRAY_SIZE(yinwoods_device));
@@ -104,8 +111,10 @@ static int __init yinwoods_init(void) {
 
 static void __exit yinwoods_exit(void) {
 
+    i = 0;
     for(i=0; i<device_num; ++i) {
-        platform_device_unregister(&yinwoods_device[i]);
+        printk(KERN_ALERT " --- unregister device[%d]\n", i);
+        //platform_device_unregister(&yinwoods_device[i]);
     }
 }
 
