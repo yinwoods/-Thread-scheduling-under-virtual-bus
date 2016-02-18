@@ -29,14 +29,26 @@ static int result;              //保存主状态位进程的计算结果
 struct class *yinwoods_class;
 struct device *yinwoods_dev;
 
-/*
+static ssize_t yinwoods_store(struct device *dev, struct device_attribute *attr, char *buf, size_t size) {
+    if(size > 4096) {
+        printk(KERN_ALERT "fuck you!");
+        return 0;
+    }
+    return sprintf(((struct yinwoods_data*) dev->platform_data)->a, buf);
+}
+
+static ssize_t yinwoods_show(struct device *dev, struct device_attribute *attr, char *buf) {
+    return sprintf(buf, ((struct yinwoods_data*) dev->platform_data)->a);
+}
+
 struct device_attribute dev_attr_brightness = {
     .attr = {
         .name = "yinwoods",
         .mode = 0644
     },
+    .show = yinwoods_show,
+    .store = yinwoods_store,
 };
-*/
 
 static int yinwoods_probe(struct platform_device *dev) {
     struct yinwoods_data *p = (dev->dev).platform_data;
@@ -100,6 +112,7 @@ static int yinwoods_probe(struct platform_device *dev) {
 
 static int yinwoods_remove(struct platform_device *dev) {
     struct yinwoods_data *p = (dev->dev).platform_data;
+    device_remove_file(p->dev, &dev_attr_brightness);
     device_unregister(p->dev);
 
     return 0;
