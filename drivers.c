@@ -8,6 +8,7 @@
 #include <linux/mm.h>
 
 MODULE_LICENSE("GPL");
+MODULE_AUTHOR("yinwoods");
 
 struct yinwoods_data {
     char a[4096];
@@ -38,12 +39,12 @@ static ssize_t yinwoods_store(struct device *dev, struct device_attribute *attr,
 }
 
 static ssize_t yinwoods_show(struct device *dev, struct device_attribute *attr, char *buf) {
-    return sprintf(buf, ((struct yinwoods_data*) dev->platform_data)->a);
+    return sprintf(buf, ((struct yinwoods_data *) dev->platform_data)->a);
 }
 
 struct device_attribute dev_attr_brightness = {
     .attr = {
-        .name = "yinwoods",
+        .name = "love",
         .mode = 0644
     },
     .show = yinwoods_show,
@@ -56,9 +57,12 @@ static int yinwoods_probe(struct platform_device *dev) {
     p->dev = yinwoods_dev;
     yinwoods_dev->platform_data = p;
 
+
+    device_create_file(yinwoods_dev, &dev_attr_brightness);
+
     printk(KERN_ALERT "%s\n", p->mutex);
     printk(KERN_ALERT "device[%d]'s status = %d\n", dev->id, p->status);
-
+    
     //判断是id 为 0的设备, 计算算式的值
     if(dev->id == 0) {
         if(p->status == 0) {
