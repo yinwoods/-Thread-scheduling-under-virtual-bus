@@ -13,7 +13,6 @@
 #include <linux/wait.h>
 
 int i;
-int j;
 static int device_num = 10;
 static int global_status[11] = {0, 1, 2, 0, 1, 2, 0, 1, 2, 0};
 
@@ -34,6 +33,8 @@ struct yinwoods_data {
 
     char *mutex;//进程间交互变量
 };
+
+struct yinwoods_data *p;
 
 static void yinwoods_release(struct device *dev) {
     return;
@@ -231,16 +232,20 @@ static int __init yinwoods_init(void) {
 
     i = 0;
 
+    //如果在为device[1]赋值状态位之前给device[0]赋值状态位会导致global[1]的值改变，因此尝试先为device[1]赋值状态位，再为device[0]赋值状态位
+    //bug得到修复
 
-    for(i=0; i<device_num; ++i) {
+    p = yinwoods_device[1].dev.platform_data;
+    p->status = global_status[1];
+    platform_device_register(&yinwoods_device[1]);
 
-        struct yinwoods_data *p = yinwoods_device[i].dev.platform_data;
-        j = 0;
-        for(j=0; j<device_num; ++j) {
-            printk(KERN_ALERT "global_status[%d] = %d\n", j, global_status[j]);
-        }
+    p = yinwoods_device[0].dev.platform_data;
+    p->status = global_status[0];
+    platform_device_register(&yinwoods_device[0]);
 
-        printk(KERN_ALERT "global_status[%d] = %d\n", i, global_status[i]);
+    for(i=2; i<device_num; ++i) {
+
+        p = yinwoods_device[i].dev.platform_data;
         p->status = global_status[i];
         platform_device_register(&yinwoods_device[i]);
         //printk(KERN_ALERT " --- register device[%d]\n", i);
