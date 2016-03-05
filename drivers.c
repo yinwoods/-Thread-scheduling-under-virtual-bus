@@ -57,7 +57,6 @@ static int yinwoods_probe(struct platform_device *dev) {
     p->dev = yinwoods_dev;
     yinwoods_dev->platform_data = p;
 
-
     device_create_file(yinwoods_dev, &dev_attr_brightness);
 
     printk(KERN_ALERT "%s\n", p->mutex);
