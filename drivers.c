@@ -6,6 +6,7 @@
 #include <linux/device.h>
 #include <linux/slab.h>
 #include <linux/mm.h>
+#include <linux/uaccess.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("yinwoods");
@@ -52,12 +53,43 @@ struct device_attribute dev_attr_brightness = {
 };
 
 static int yinwoods_probe(struct platform_device *dev) {
+
+    //-------------------------------
+    //对字符设备的操作部分
+
+    struct file *fp; //用来读写字符设备
+    mm_segment_t fs;
+    loff_t pos;
+    static char buf[] = "Write information to dev!";
+
+    //-------------------------------
+
     struct yinwoods_data *p = (dev->dev).platform_data;
     yinwoods_dev = device_create(yinwoods_class, &(dev->dev), 0, NULL, "%s", p->name);
     p->dev = yinwoods_dev;
     yinwoods_dev->platform_data = p;
 
     device_create_file(yinwoods_dev, &dev_attr_brightness);
+
+    //-------------------------------------
+    //对字符设备的操作部分
+    fp = filp_open("/dev/memdev0", O_RDWR|O_CREAT, 0644);
+    if(IS_ERR(fp)) {
+        printk(KERN_ALERT "Create File Error\n");
+        return -1;
+    }
+    
+    fs = get_fs();
+    set_fs(KERNEL_DS);
+    pos = 0;
+    vfs_write(fp, buf, sizeof(buf), &pos);
+    printk(KERN_ALERT "write: %s\n", buf);
+    pos = 0;
+    vfs_read(fp, buf, sizeof(buf), &pos);
+    printk(KERN_ALERT "read : %s\n", buf);
+    filp_close(fp, NULL);
+    set_fs(fs);
+    //-------------------------------------
 
     printk(KERN_ALERT "%s\n", p->mutex);
     printk(KERN_ALERT "device[%d]'s status = %d\n", dev->id, p->status);
