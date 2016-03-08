@@ -61,6 +61,7 @@ static int yinwoods_probe(struct platform_device *dev) {
     mm_segment_t fs;
     loff_t pos;
     static char buf[] = "Write information to dev!";
+    static char newbuf[100];
 
     //-------------------------------
 
@@ -83,10 +84,27 @@ static int yinwoods_probe(struct platform_device *dev) {
     set_fs(KERNEL_DS);
     pos = 0;
     vfs_write(fp, buf, sizeof(buf), &pos);
-    printk(KERN_ALERT "write: %s\n", buf);
+    printk(KERN_ALERT "memdev0 write: %s\n", buf);
     pos = 0;
-    vfs_read(fp, buf, sizeof(buf), &pos);
-    printk(KERN_ALERT "read : %s\n", buf);
+    vfs_read(fp, newbuf, sizeof(buf), &pos);
+    printk(KERN_ALERT "memdev0 read : %s\n", newbuf);
+    filp_close(fp, NULL);
+    set_fs(fs);
+
+    fp = filp_open("/dev/memdev1", O_RDWR|O_CREAT, 0644);
+    if(IS_ERR(fp)) {
+        printk(KERN_ALERT "Create File Error\n");
+        return -1;
+    }
+
+    fs = get_fs();
+    set_fs(KERNEL_DS);
+    pos = 0;
+    vfs_write(fp, buf, sizeof(buf), &pos);
+    printk(KERN_ALERT "memdev1 write: %s\n", buf);
+    pos = 0;
+    vfs_read(fp, newbuf, sizeof(buf), &pos);
+    printk(KERN_ALERT "memdev1 read: %s\n", newbuf);
     filp_close(fp, NULL);
     set_fs(fs);
     //-------------------------------------

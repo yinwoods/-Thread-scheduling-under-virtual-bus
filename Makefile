@@ -3,7 +3,7 @@ KERNEL_DIR = /usr/src/linux-headers-$(shell uname -r)/
 PWD := $(shell pwd)
 
 obj-m := drivers.o
-obj-m += dev.o
+obj-m += devices.o
 
 all:
 	$(MAKE) -C $(KERNEL_DIR) M=$(PWD) modules
