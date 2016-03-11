@@ -59,7 +59,7 @@ static void yinwoods_release(struct device *dev) {
     return;
 }
 
-struct yinwoods_data info0 = {/*{{{*/
+struct yinwoods_data info0 = {
     .name = "yinwoods_zero",
     //主
     .status = 0,
@@ -140,9 +140,9 @@ struct yinwoods_data info9 = {
     .left = 1,
     .right = 9,
     .mutex = "translate this message from info9",
-};/*}}}*/
+};
 
-static struct platform_device yinwoods_device[] = {/*{{{*/
+static struct platform_device yinwoods_device[] = {
     [0] = {
         .name = "yinwoods",
         .id = 0,
@@ -232,7 +232,7 @@ static struct platform_device yinwoods_device[] = {/*{{{*/
             .release = yinwoods_release,
         },
     },
-};/*}}}*/
+};
 
 //---------------------------------------------------
 

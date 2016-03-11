@@ -42,3 +42,9 @@ My Graduation Project
 下一步要实现的是创建多个设备时，为每一个设备创建额外的字符设备。并通过总线进行消息的传递。
 
 3-8日 实现了多个字符设备的创建，在内核空间可以通过总线对其对写，在用户空间可以通过fopen fread fwrite对其进行操作。
+
+运行方法：
+sudo insmod drivers.ko
+sudo insmod devices.ko device_num= global_status=,,
+sudo mknod /dev/memdev0 c *** 0
+dmesg
