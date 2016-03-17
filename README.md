@@ -44,7 +44,13 @@ My Graduation Project
 3-8日 实现了多个字符设备的创建，在内核空间可以通过总线对其对写，在用户空间可以通过fopen fread fwrite对其进行操作。
 
 运行方法：
-sudo insmod drivers.ko
-sudo insmod devices.ko device_num= global_status=,,
-sudo mknod /dev/memdev0 c *** 0
-dmesg
+
+> - sudo insmod drivers.ko #挂载驱动
+
+> - sudo insmod devices.ko device_num= global_status=,, #挂载device_num个设备并指定各个设备状态位
+
+> - sudo mknod /dev/memdev0 c *** 0 #创建字符设备
+
+> - dmesg #显示程序运行信息
+
+3-17日 目前老师要求功能已经实现，经过与老师讨论，可以考虑加入cgroups技术。下一步就是理解cgroups并会简单使用。
