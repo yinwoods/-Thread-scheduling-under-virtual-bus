@@ -49,8 +49,6 @@ struct yinwoods_data {
     int status; //进程状态位
 
     struct cdev cdev; //字符设备
-
-    char *mutex;//进程间交互变量
 };
 
 struct yinwoods_data *p;
@@ -65,7 +63,6 @@ struct yinwoods_data info0 = {
     .status = 0,
     .left = 1,
     .right = 0,
-    .mutex = "translate this message from info0",
 };
 
 struct yinwoods_data info1 = {
@@ -74,7 +71,6 @@ struct yinwoods_data info1 = {
     .status = 0,
     .left = 1,
     .right = 1,
-    .mutex = "translate this message from info1",
 };
 
 struct yinwoods_data info2 = {
@@ -83,7 +79,6 @@ struct yinwoods_data info2 = {
     .status = 2,
     .left = 1,
     .right = 2,
-    .mutex = "translate this message from info2",
 };
 
 struct yinwoods_data info3 = {
@@ -91,7 +86,6 @@ struct yinwoods_data info3 = {
     .status = 0,
     .left = 1,
     .right = 3,
-    .mutex = "translate this message from info3",
 };
 
 struct yinwoods_data info4 = {
@@ -99,7 +93,6 @@ struct yinwoods_data info4 = {
     .status = 0,
     .left = 1,
     .right = 4,
-    .mutex = "translate this message from info4",
 };
 
 struct yinwoods_data info5 = {
@@ -107,7 +100,6 @@ struct yinwoods_data info5 = {
     .status = 0,
     .left = 1,
     .right = 5,
-    .mutex = "translate this message from info5",
 };
 
 struct yinwoods_data info6 = {
@@ -115,7 +107,6 @@ struct yinwoods_data info6 = {
     .status = 0,
     .left = 1,
     .right = 6,
-    .mutex = "translate this message from info6",
 };
 
 struct yinwoods_data info7 = {
@@ -123,7 +114,6 @@ struct yinwoods_data info7 = {
     .status = 0,
     .left = 1,
     .right = 7,
-    .mutex = "translate this message from info7",
 };
 
 struct yinwoods_data info8 = {
@@ -131,7 +121,6 @@ struct yinwoods_data info8 = {
     .status = 0,
     .left = 1,
     .right = 8,
-    .mutex = "translate this message from info8",
 };
 
 struct yinwoods_data info9 = {
@@ -139,7 +128,6 @@ struct yinwoods_data info9 = {
     .status = 0,
     .left = 1,
     .right = 9,
-    .mutex = "translate this message from info9",
 };
 
 static struct platform_device yinwoods_device[] = {
@@ -443,17 +431,6 @@ static int __init yinwoods_init(void) {
         mem_devp[i].data = kmalloc(MEMDEV_SIZE, GFP_KERNEL);
         memset(mem_devp[i].data, 0, MEMDEV_SIZE);
     } 
-
-    sprintf(info0.a, "this message is from info0 to driver!");
-    sprintf(info1.a, "this message is from info1 to driver!");
-    sprintf(info2.a, "this message is from info2 to driver!");
-    sprintf(info3.a, "this message is from info3 to driver!");
-    sprintf(info4.a, "this message is from info4 to driver!");
-    sprintf(info5.a, "this message is from info5 to driver!");
-    sprintf(info6.a, "this message is from info6 to driver!");
-    sprintf(info7.a, "this message is from info7 to driver!");
-    sprintf(info8.a, "this message is from info8 to driver!");
-    sprintf(info9.a, "this message is from info9 to driver!");
 
     printk(KERN_ALERT "device_num = %d", device_num);
 

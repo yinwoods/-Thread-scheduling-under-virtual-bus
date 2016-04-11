@@ -21,8 +21,6 @@ struct yinwoods_data {
 
     int status;
 
-    char *mutex;
-
     struct device *dev;
 };
 
@@ -60,8 +58,10 @@ static int yinwoods_probe(struct platform_device *dev) {
     struct file *fp; //用来读写字符设备
     mm_segment_t fs;
     loff_t pos;
-    static char buf[] = "Write information to dev!";
-    static char newbuf[100];
+    static char w_info[100] = "";
+
+    //设备对应的字符设备位置
+    static char dev_pos[100] = "";
 
     //-------------------------------
 
@@ -72,61 +72,36 @@ static int yinwoods_probe(struct platform_device *dev) {
 
     device_create_file(yinwoods_dev, &dev_attr_brightness);
 
-    //-------------------------------------
-    //对字符设备的操作部分
-    fp = filp_open("/dev/memdev0", O_RDWR|O_CREAT, 0644);
-    if(IS_ERR(fp)) {
-        printk(KERN_ALERT "Create File Error\n");
-        return -1;
-    }
-    
-    fs = get_fs();
-    set_fs(KERNEL_DS);
-    pos = 0;
-    vfs_write(fp, buf, sizeof(buf), &pos);
-    printk(KERN_ALERT "memdev0 write: %s\n", buf);
-    pos = 0;
-    vfs_read(fp, newbuf, sizeof(buf), &pos);
-    printk(KERN_ALERT "memdev0 read : %s\n", newbuf);
-    filp_close(fp, NULL);
-    set_fs(fs);
-
-    fp = filp_open("/dev/memdev1", O_RDWR|O_CREAT, 0644);
-    if(IS_ERR(fp)) {
-        printk(KERN_ALERT "Create File Error\n");
-        return -1;
-    }
-
-    fs = get_fs();
-    set_fs(KERNEL_DS);
-    pos = 0;
-    vfs_write(fp, buf, sizeof(buf), &pos);
-    printk(KERN_ALERT "memdev1 write: %s\n", buf);
-    pos = 0;
-    vfs_read(fp, newbuf, sizeof(buf), &pos);
-    printk(KERN_ALERT "memdev1 read: %s\n", newbuf);
-    filp_close(fp, NULL);
-    set_fs(fs);
-    //-------------------------------------
-
-    printk(KERN_ALERT "%s\n", p->mutex);
-    printk(KERN_ALERT "device[%d]'s status = %d\n", dev->id, p->status);
-    
     //将该设备的一个字符串保存下来，在下一步传送给另一个设备
     //状态位是主，计算并保存结果
     if(p->status == 0) {
         p->result = p->left + p->right;
         result = p->result;
-        printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
-        printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
     }
     //状态位是热，只计算，不保存结果
     else if(p->status == 1) {
         p->result = p->left + p->right;
-        printk(KERN_ALERT "device%d status = %d\n", dev->id, p->status);
-        printk(KERN_ALERT "device%d result = %d\n", dev->id, p->result);
     }
     //状态位是冷，不计算
+
+
+    //-------------------------------------
+    //对字符设备的操作部分
+    snprintf(dev_pos, sizeof(dev_pos), "/dev/memdev%d", dev->id);
+
+    snprintf(w_info, sizeof(w_info), "设备编号： %d\n状态位：%d\n计算结果：%d\n", dev->id, p->status, p->result);
+
+    fp = filp_open(dev_pos, O_RDWR|O_CREAT, 0644);
+
+    if(IS_ERR(fp)) {
+        printk(KERN_ALERT "Create File Error!\n");
+        return -1;
+    }
+    fs = get_fs();
+    set_fs(KERNEL_DS);
+    pos = 0;
+    vfs_write(fp, w_info, sizeof(w_info), &pos);
+
 
     return 0;
 }
