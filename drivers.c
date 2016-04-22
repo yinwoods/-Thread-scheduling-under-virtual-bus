@@ -21,6 +21,8 @@ struct yinwoods_data {
 
     int status;
 
+    char *mutex;
+
     struct device *dev;
 };
 
@@ -101,7 +103,9 @@ static int yinwoods_probe(struct platform_device *dev) {
     set_fs(KERNEL_DS);
     pos = 0;
     vfs_write(fp, w_info, sizeof(w_info), &pos);
-
+    
+    filp_close(fp, NULL);
+    set_fs(fs);
 
     return 0;
 }
