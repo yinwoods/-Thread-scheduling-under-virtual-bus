@@ -1,9 +1,9 @@
-echo -n "enter device_num:"
-read device_num
+device_num=$1
 
-echo -n "enter status:"
-read status
+status=$2
 
+echo "device_num=${device_num}"
+echo "status=${status}"
 
 OLD_IFS="$IFS" 
 IFS="," 
