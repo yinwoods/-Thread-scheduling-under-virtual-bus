@@ -48,7 +48,6 @@ function mnt()
 {
     #清理中间文件
     make clean > /dev/null 2>&1
-    rm tmp
 
     #编译
     make -s > /dev/null 2>&1
@@ -120,34 +119,46 @@ function main()
 	#控制逻辑
 	controlMod;
 
-	echo -n "输入想要模拟损坏的设备号："
-	read dev_id
-
-	echo "${dev_id}设备损坏"
-
-	#表示损坏
-	arr[${dev_id}]=3
-
 	#卸载
 	unmnt;
 
-	echo "进程号："$$
+	#是否进入for循环
+	echo -n "请选择是否进入for循环(输入n结束演示)："
+	read prompt
+	
+	while [[ "$prompt"x != "n"x ]]; do
+		echo -n "输入想要模拟损坏的设备号："
+		read dev_id
 
-	global_status="${arr[0]}"
-	for (( i = 1; i < ${device_num}; i++ )); do
-		global_status="${global_status},${arr[${i}]}"
+		echo "${dev_id}设备损坏"
+
+		#表示损坏
+		arr[${dev_id}]=3
+
+		echo "进程号："$$
+
+		global_status="${arr[0]}"
+		for (( i = 1; i < ${device_num}; i++ )); do
+			global_status="${global_status},${arr[${i}]}"
+		done
+
+		echo $global_status
+
+		#重新挂载
+		mnt ${device_num} 
+
+		#控制逻辑
+		controlMod
+
+		#退出的时候卸载设备
+		unmnt;
+
+		#是否进入for循环
+		echo -n "请选择是否进入for循环(y/n)："
+		read prompt
 	done
 
-	echo $global_status
-
-	#重新挂载
-	mnt ${device_num} 
-
-	#控制逻辑
-	controlMod
-
-	#退出的时候卸载设备
-	unmnt;
+	
 }
 
 

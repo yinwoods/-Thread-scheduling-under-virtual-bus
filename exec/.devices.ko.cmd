@@ -1,1 +1,0 @@
-cmd_/home/yinwoods/bs/exec/devices.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/yinwoods/bs/exec/devices.ko /home/yinwoods/bs/exec/devices.o /home/yinwoods/bs/exec/devices.mod.o

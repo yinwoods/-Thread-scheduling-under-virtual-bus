@@ -1,18 +1,8 @@
-device_num=$1
 
-status=$2
+echo -n "input i(enter quit to exit):"
+read strvar
 
-echo "device_num=${device_num}"
-echo "status=${status}"
-
-OLD_IFS="$IFS" 
-IFS="," 
-arr=($status) 
-IFS="$OLD_IFS" 
-
-global_status="${arr[0]}"
-for (( i = 1; i < ${device_num}; i++ )); do
-	global_status="${global_status},${arr[${i}]}"
+while [[ "$strvar"x != "quit"x ]]; do
+	echo $strvar
+	read strvar
 done
-
-echo $global_status

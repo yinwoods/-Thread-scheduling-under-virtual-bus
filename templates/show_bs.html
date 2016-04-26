@@ -54,6 +54,7 @@
 						</tr>
 					</thead>
 					<tbody>
+						{% if global_status %}
 						{% for status in global_status.strip() if not status == ',' %}
 						<tr>
 							<th>{{ status }}</th>
@@ -72,6 +73,7 @@
 							</td>
 						</tr>
 						{% endfor %}
+						{% endif %}
 					</tbody>
 				</table>
 

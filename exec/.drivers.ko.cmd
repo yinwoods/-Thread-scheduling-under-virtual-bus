@@ -1,1 +1,0 @@
-cmd_/home/yinwoods/bs/exec/drivers.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/yinwoods/bs/exec/drivers.ko /home/yinwoods/bs/exec/drivers.o /home/yinwoods/bs/exec/drivers.mod.o
