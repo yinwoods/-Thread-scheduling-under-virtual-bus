@@ -1,3 +1,9 @@
+.hr0 {
+	height:1px;
+	border:none;
+	border-top:1px dashed #0066CC;
+}
+
 .footer {
 	display: block;
 	position: absolute;

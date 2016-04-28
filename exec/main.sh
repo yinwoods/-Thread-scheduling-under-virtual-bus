@@ -5,7 +5,7 @@ function preprocess()
 {
 
     #清理内核信息
-    sudo dmesg --clear
+    echo "yinhua" | sudo -S dmesg --clear
 
     #清理屏幕信息
     clear
@@ -107,6 +107,10 @@ function main()
 	#卸载驱动设备
 	unmnt;
 
+	cpuUsage=$(echo $$)
+
+	echo "进程号：$cpuUsage"
+
 	echo -n '请输入创建设备个数:'
 	read device_num
 
@@ -135,8 +139,6 @@ function main()
 		#表示损坏
 		arr[${dev_id}]=3
 
-		echo "进程号："$$
-
 		global_status="${arr[0]}"
 		for (( i = 1; i < ${device_num}; i++ )); do
 			global_status="${global_status},${arr[${i}]}"
@@ -161,5 +163,26 @@ function main()
 	
 }
 
+function cgroup() {
+	
+	#进入root
+	sudo su
+	
+	cd /sys/fs/cgroup/cpu
+	mkdir bs
+
+	#创建bs层次结构
+	cgcreate -g cpu:/bs
+	cd bs
+
+	#更改单位时间内使用cpu时间为50%
+	cgset -r cpu.cfs_quota_es=50000 bs
+
+	#将进程pid加入bs下的tasks文件，限制cpu使用时间
+	echo $pid > tasks
+
+	#查看进程号为pid的进程
+	top -p $pid
+}
 
 main;

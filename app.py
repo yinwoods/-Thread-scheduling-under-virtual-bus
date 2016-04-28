@@ -26,8 +26,15 @@ def showPage(name=None):
 	if name=='show_bs':
 		doc = ''
 		doc_json = []
+		
 		device_num = None
 		global_status = None
+		cpu_time = None
+
+		cpuForm = CpuForm()
+		if cpuForm.validate_on_submit():
+			session['cpu_time'] = cpuForm.cpu_time.data
+
 		form = NameForm()
 		if form.validate_on_submit():
 			session['device_num'] = form.device_num.data
@@ -49,7 +56,7 @@ def showPage(name=None):
 					doc += line.lstrip().rstrip() + '\n'
 				doc_json += [doc]
 			#os.system('sh exec/test.sh %s %s >> tmp' % (device_num, global_status))
-		return render_template('show_bs.html', form=form, device_num=session.get('device_num'), global_status=session.get('global_status'), doc_json=doc_json)
+		return render_template('show_bs.html', form=form, device_num=session.get('device_num'), global_status=session.get("global_status"), cpu_time=session.get('cpu_time'), doc_json=doc_json)
 
 	if name==None:
 		redirect(url_for('404.html'))
@@ -69,6 +76,10 @@ class NameForm(Form):
 	device_num = IntegerField(label='输入要创建设备个数：', validators=[Required()])
 	global_status = StringField(label='输入状态位：', validators=[Required()])
 	submit = SubmitField(label='演示项目')
+
+class CpuForm(Form):
+	cpu_time = IntegerField(label="输入想要限制的CPU比例：", validators=[Required()])
+	submit = SubmitField(label="限制CPU")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
