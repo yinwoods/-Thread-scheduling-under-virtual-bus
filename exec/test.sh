@@ -3,6 +3,7 @@ python useCpu.py &
 
 ps -o pid,cmd | grep "useCpu.py" > tmp
 pidInfo=$(head -1 tmp)
+rm tmp
 
 OLD_IFS="$IFS"
 IFS=' '
@@ -12,7 +13,8 @@ pid=${arr[0]}
 
 echo "该进程号为：$pid"
 
-#function cgroup() {
+#需要用root执行
+function cgroup() {
 	
 	cd /sys/fs/cgroup/cpu
 	sudo mkdir bs
@@ -43,6 +45,6 @@ echo "该进程号为：$pid"
 
 	#杀死进程
 	kill $pid
-#}
+}
 
-#cgroup
+cgroup
