@@ -91,7 +91,7 @@ static int yinwoods_probe(struct platform_device *dev) {
     //对字符设备的操作部分
     snprintf(dev_pos, sizeof(dev_pos), "/dev/memdev%d", dev->id);
 
-    snprintf(w_info, sizeof(w_info), "设备编号： %d\n状态位：%d\n计算结果：%d\n", dev->id, p->status, p->result);
+    snprintf(w_info, sizeof(w_info), "设备编号： %d\n状态位： %d\n计算结果： %d\n", dev->id, p->status, p->result);
 
     fp = filp_open(dev_pos, O_RDWR|O_CREAT, 0644);
 

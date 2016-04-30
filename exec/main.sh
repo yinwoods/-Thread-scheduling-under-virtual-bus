@@ -5,7 +5,7 @@ function preprocess()
 {
 
     #清理内核信息
-    echo "yinhua" | sudo -S dmesg --clear
+    echo "yinhua..228" | sudo -S dmesg --clear
 
     #清理屏幕信息
     clear
@@ -111,11 +111,21 @@ function main()
 
 	echo "进程号：$cpuUsage"
 
-	echo -n '请输入创建设备个数:'
-	read device_num
+	
+	if [[ $1 = '' ]]; then
+		echo -n '请输入创建设备个数:'
+		read device_num
+	else
+		device_num=$1	
+	fi
+	
 
-	echo -n '请依次输入各个设备的状态位:(以逗号隔开)'
-	read global_status
+	if [[ $2 = '' ]]; then
+		echo -n '请依次输入各个设备的状态位:(以逗号隔开)'
+		read global_status
+	else
+		global_status=$2
+	fi
 
 	#挂载驱动设备
 	mnt;
@@ -127,17 +137,65 @@ function main()
 	unmnt;
 
 	#是否进入for循环
-	echo -n "请选择是否进入for循环(输入n结束演示)："
+	echo -n "按任意键继续（q退出）："
 	read prompt
 	
-	while [[ "$prompt"x != "n"x ]]; do
+	while [[ "$prompt"x != "q"x ]]; do
 		echo -n "输入想要模拟损坏的设备号："
 		read dev_id
 
 		echo "${dev_id}设备损坏"
 
+		#保存当前状态位
+		tmp=${arr[${dev_id}]}
+
+		for (( i = 0; i < ${device_num}; i++ )); do
+			echo -e "$i --- ${arr[${i}]}"
+		done
+
+		echo -e "tmp = $tmp"
+
 		#表示损坏
 		arr[${dev_id}]=3
+
+		#当前状态位为主，取一个热切换为主
+		if [[ $tmp = 0 ]]; then
+			echo "tmp = 0"
+			for (( i = 0; i < ${device_num}; i++ )); do
+				if [[ $i = ${dev_id} ]]; then
+					continue
+				elif [[ ${arr[${i}]} = 1 ]]; then
+					echo "arr[${i}] = 0"
+					arr[${i}]=0
+					tmp=1
+					break
+				fi
+			done
+		fi
+
+		#当前状态位为热，取一个冷切换为热
+		if [[ $tmp = 1 ]]; then
+			echo "tmp = 1"
+			for (( i = 0; i < ${device_num}; i++ )); do
+				if [[ $i = ${dev_id} ]]; then
+					continue
+				elif [[ ${arr[${i}]} = 2 ]]; then
+					echo "arr[${i}] = 1"
+					arr[${i}]=1
+					tmp=2
+					break
+				fi
+			done
+		fi
+
+		#当前状态位为冷，不用管
+		if [[ $tmp = 2 ]]; then
+			echo "tmp = 2"
+		fi
+
+		for (( i = 0; i < ${device_num}; i++ )); do
+			echo -e "$i --- ${arr[${i}]}"
+		done
 
 		global_status="${arr[0]}"
 		for (( i = 1; i < ${device_num}; i++ )); do
@@ -156,7 +214,7 @@ function main()
 		unmnt;
 
 		#是否进入for循环
-		echo -n "请选择是否进入for循环(y/n)："
+		echo -n "按任意键继续（q退出）："
 		read prompt
 	done
 
@@ -197,4 +255,4 @@ function cgroup() {
 	kill $pid
 }
 
-main;
+main $1 $2;
