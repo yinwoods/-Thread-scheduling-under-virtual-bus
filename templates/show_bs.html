@@ -9,7 +9,7 @@
 			<div class="hero-unit col-md-4">
 
 				<form action="" method="post" class="form" role="form">
-  					{{ form.hidden_tag() }}
+  					{{ mountForm.hidden_tag() }}
 
 					<div class="form-group  required">
 						<label class="control-label" for="device_num">输入要创建设备个数：</label>
@@ -33,7 +33,23 @@
 
 				</form>
 
-				<br><br><hr class="hr0"><br><br>
+				<br><hr class="hr0"><br>
+
+				<div>
+					<form action="" method="post" class="form" role="form">
+  					{{ controlForm.hidden_tag() }}
+
+					<div class="form-group  required">
+						<label class="control-label" for="damage_device">输入要模拟损坏的设备编号：</label>
+          				<input class="form-control" id="damage_device" name="damage_device" required="" type="text" value="">
+					</div>
+
+					<center><button class="btn btn-primary" id="submit" type="submit">开始模拟</button></center>
+
+				</form>
+				</div>
+				
+				<br><hr class="hr0"><br>
 
 				<span><h3 class="text-center">CPU利用率</h3></span>
 
@@ -47,6 +63,7 @@
 
 				<div>
 					<form action="" method="post" class="form" role="form">
+						{{ cpuForm.hidden_tag() }}
 						<div class="form-group required">
 							<label class="control-label" for="cpu_time">输入想要限制的CPU比例：</label>
 								<input class="form-control" id="cpu_time" name="cpu_time" required="" type="" value="">

@@ -1,9 +1,11 @@
 {% extends "layout.html" %}
-{% block title  %}毕设进度{% endblock %}
+{% block title %}毕设进度{% endblock %}
 
 {% block page_content %}
 
 	<div class="col-md-12">
-	{{ content|markdown }}
+		<div class="markdown">
+			{{ content|markdown }}
+		</div>
 	</div>
 {% endblock %}
