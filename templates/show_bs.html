@@ -36,7 +36,7 @@
 				<br><hr class="hr0"><br>
 
 				<div>
-					<form action="" method="post" class="form" role="form">
+					<form action="" method="post" class="form" role="controlForm">
   					{{ controlForm.hidden_tag() }}
 
 					<div class="form-group  required">
@@ -114,8 +114,8 @@
 			</div>
 
 			<div class="col-md-8">
-				{% if device_num %}<h4>设备个数:<span class="badge badge-large badge-inverse">{{ device_num }}</span>{% else %}待输入{% endif %}
-				{% if global_status %}状态位:<span class="badge badge-inverse">{{ global_status }}</span>{% else %}待输入</h4>{% endif %}
+				<h4>设备个数:<span class="badge badge-large badge-inverse">{% if device_num %}{{ device_num }}{% else %}待输入{% endif %}</span>
+				状态位:<span class="badge badge-inverse">{% if global_status %}{{ global_status }}{% else %}待输入{% endif %}</span></h4>
 
 				<hr>
 
@@ -123,11 +123,11 @@
 
 				{% for doc in doc_json %}
 					<div class="div">
-						<p>设备编号： {{ doc[0] }}</p>
-						<p>状态位： {{doc[1]}}</p>
-						<p>计算结果： {{doc[2]}}</p>
+						<p>设备编号: {{ doc[0] }}</p>
+						<p>状态位: {{doc[1]}}</p>
+						<p>计算结果: {{doc[2]}}</p>
 					</div>
-					{% if loop.index == 6 %}
+					{% if loop.index == 5 %}
 						<br><hr>
 					{% endif %}
 				{% endfor %}

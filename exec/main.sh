@@ -5,7 +5,7 @@ function preprocess()
 {
 
     #清理内核信息
-    echo "yinhua..228" | sudo -S dmesg --clear
+    echo "yinhua" | sudo -S dmesg --clear
 
     #清理屏幕信息
     clear
@@ -205,10 +205,10 @@ function main()
 		echo $global_status
 
 		#重新挂载
-		mnt ${device_num} 
+		mnt;
 
 		#控制逻辑
-		controlMod
+		controlMod;
 
 		#退出的时候卸载设备
 		unmnt;

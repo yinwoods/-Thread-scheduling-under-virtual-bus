@@ -5,7 +5,7 @@ function preprocess()
 {
 
     #清理内核信息
-    echo "yinhua..228" | sudo -S dmesg --clear
+    echo "yinhua" | sudo -S dmesg --clear
 
     #清理屏幕信息
     clear
@@ -147,12 +147,12 @@ function main()
 
 		#当前状态位为主，取一个热切换为主
 		if [[ $tmp = 0 ]]; then
-			echo '当前状态位为主，取一个热切换为主'
+			echo '当前状态位为主，尝试取一个热切换为主'
 			for (( i = 0; i < ${device_num}; i++ )); do
 				if [[ $i = ${damage_device_id} ]]; then
 					continue
 				elif [[ ${arr[${i}]} = 1 ]]; then
-					echo '将设备${i}切换为主'
+					echo "将设备${i}切换为主"
 					arr[${i}]=0
 					tmp=1
 					break
@@ -162,12 +162,12 @@ function main()
 
 		#当前状态位为热，取一个冷切换为热
 		if [[ $tmp = 1 ]]; then
-			echo '当前状态位为热，取一个冷切换为热'
+			echo '当前状态位为热，尝试取一个冷切换为热'
 			for (( i = 0; i < ${device_num}; i++ )); do
 				if [[ $i = ${damage_device_id} ]]; then
 					continue
 				elif [[ ${arr[${i}]} = 2 ]]; then
-					echo '将设备${i}切换为冷'
+					echo "将设备${i}切换为热"
 					arr[${i}]=1
 					tmp=2
 					break
@@ -187,7 +187,7 @@ function main()
 	done
 
 	#重新挂载
-	mnt ${device_num} 
+	mnt 
 
 	#控制逻辑
 	controlMod

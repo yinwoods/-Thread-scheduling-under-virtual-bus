@@ -5,7 +5,7 @@ function preprocess()
 {
 
     #清理内核信息
-    echo "yinhua..228" | sudo -S dmesg --clear
+    echo "yinhua" | sudo -S dmesg --clear
 
     #清理屏幕信息
     clear

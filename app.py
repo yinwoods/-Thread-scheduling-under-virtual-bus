@@ -65,7 +65,6 @@ def show_bs(name=None):
 		indexList = damage_device.split(',')
 		for index in indexList:
 			arr[int(index)] = '3'
-		print(arr)
 		global_status = ','.join(arr)
 		session['global_status'] = global_status
 
@@ -94,7 +93,7 @@ def show_bs(name=None):
 				if len(results) == 2:
 					newline += results[1].lstrip().rstrip()
 			doc_json += [newline]
-		
+	
 	return render_template('show_bs.html', mountForm=mountForm, cpuForm=cpuForm, controlForm=controlForm, device_num=session.get('device_num'), global_status=session.get("global_status"), cpu_time=session.get('cpu_time'), doc_json=doc_json)
 
 #关于毕设
