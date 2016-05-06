@@ -46,9 +46,9 @@
             <div class="well"> 
                 <h2>指导教师</h2>
                 <ul class="list-group"> 
-                    <li class="list-group-item list-group-item-info"><span class="glyphicon glyphicon-user"></span> 肖利民 教授 xiaolm@buaa.edu.cn</li> 
-                    <li class="list-group-item list-group-item-info"><span class="glyphicon glyphicon-user"></span> 庄   雷 教授 ielzhuang@zzu.edu.cn</li>
-                    <li class="list-group-item list-group-item-info"><span class="glyphicon glyphicon-user"></span> 秦广军 博士 qingj@buaa.edu.cn</li> 
+                    <li class="list-group-item list-group-item-info"><span class="glyphicon glyphicon-user"></span> 肖利民 教授 北京航空航天大学</li> 
+                    <li class="list-group-item list-group-item-info"><span class="glyphicon glyphicon-user"></span> 庄   雷 教授 郑州大学</li>
+                    <li class="list-group-item list-group-item-info"><span class="glyphicon glyphicon-user"></span> 秦广军 博士 北京航空航天大学</li> 
                     <li class="list-group-item list-group-item-info"></li> 
                 </ul> 
                 <p></p> 
