@@ -142,59 +142,61 @@ function main()
 	
 	while [[ "$prompt"x != "q"x ]]; do
 		echo -n "输入想要模拟损坏的设备号："
-		read dev_id
+		read damage_device
 
-		echo "${dev_id}设备损坏"
+		OLD_IFS="$IFS"
+		IFS=','
+		damage_device_arr=(${damage_device})
+		IFS="$OLD_IFS"
 
-		#保存当前状态位
-		tmp=${arr[${dev_id}]}
+		OLD_IFS="$IFS"
+		IFS=','
+		arr=(${global_status})
+		IFS="$OLD_IFS"
 
-		for (( i = 0; i < ${device_num}; i++ )); do
-			echo -e "$i --- ${arr[${i}]}"
-		done
+		for damage_device_id in ${damage_device_arr[@]}; do
+			echo "${damage_device_id}设备损坏"	
 
-		echo -e "tmp = $tmp"
+			#保存当前状态位
+			tmp=${arr[${damage_device_id}]}
 
-		#表示损坏
-		arr[${dev_id}]=3
+			#表示损坏
+			arr[${damage_device_id}]=3
 
-		#当前状态位为主，取一个热切换为主
-		if [[ $tmp = 0 ]]; then
-			echo "tmp = 0"
-			for (( i = 0; i < ${device_num}; i++ )); do
-				if [[ $i = ${dev_id} ]]; then
-					continue
-				elif [[ ${arr[${i}]} = 1 ]]; then
-					echo "arr[${i}] = 0"
-					arr[${i}]=0
-					tmp=1
-					break
-				fi
-			done
-		fi
+			#当前状态位为主，取一个热切换为主
+			if [[ $tmp = 0 ]]; then
+				echo '当前状态位为主，尝试取一个热切换为主'
+				for (( i = 0; i < ${device_num}; i++ )); do
+					if [[ $i = ${damage_device_id} ]]; then
+						continue
+					elif [[ ${arr[${i}]} = 1 ]]; then
+						echo "将设备${i}切换为主"
+						arr[${i}]=0
+						tmp=1
+						break
+					fi
+				done
+			fi
 
-		#当前状态位为热，取一个冷切换为热
-		if [[ $tmp = 1 ]]; then
-			echo "tmp = 1"
-			for (( i = 0; i < ${device_num}; i++ )); do
-				if [[ $i = ${dev_id} ]]; then
-					continue
-				elif [[ ${arr[${i}]} = 2 ]]; then
-					echo "arr[${i}] = 1"
-					arr[${i}]=1
-					tmp=2
-					break
-				fi
-			done
-		fi
+			#当前状态位为热，取一个冷切换为热
+			if [[ $tmp = 1 ]]; then
+				echo '当前状态位为热，尝试取一个冷切换为热'
+				for (( i = 0; i < ${device_num}; i++ )); do
+					if [[ $i = ${damage_device_id} ]]; then
+						continue
+					elif [[ ${arr[${i}]} = 2 ]]; then
+						echo "将设备${i}切换为热"
+						arr[${i}]=1
+						tmp=2
+						break
+					fi
+				done
+			fi
 
-		#当前状态位为冷，不用管
-		if [[ $tmp = 2 ]]; then
-			echo "tmp = 2"
-		fi
-
-		for (( i = 0; i < ${device_num}; i++ )); do
-			echo -e "$i --- ${arr[${i}]}"
+			#当前状态位为冷，不用管
+			if [[ $tmp = 2 ]]; then
+				echo ""
+			fi
 		done
 
 		global_status="${arr[0]}"

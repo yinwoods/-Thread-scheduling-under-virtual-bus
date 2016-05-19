@@ -62,7 +62,7 @@
 				<br>
 
 				<div>
-					<form action="" method="post" class="form" role="form">
+					<form action="" method="post" class="form" role="cpuForm">
 						{{ cpuForm.hidden_tag() }}
 						<div class="form-group required">
 							<label class="control-label" for="cpu_time">输入想要限制的CPU比例：</label>
@@ -89,7 +89,6 @@
 						        clearInterval(timer);
 						    }
 							
-							<!-- 读取CPU利用率到进度条 -->
 						    $("#cpu-span").html(progress + "% CPU");
 						    $("#cpu-progress").attr("style", "width:" + progress + "%");
 						    progress = progress + step;
